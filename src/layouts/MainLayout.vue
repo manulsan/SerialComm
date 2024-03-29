@@ -10,27 +10,27 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
         <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+          {{ productName }}
+          <!-- :label="'v ' + $q.version" -->
+          <q-badge
+            color="orange"
+            text-color="black"
+            :label="'v ' + version"
+            align="top"
+        /></q-toolbar-title>
+        <div v-if="isElectron" class="q-gutter-x-sm">
+          <q-btn flat dense :icon="mdiWindowMinimize" @click="minimize" />
+          <q-btn flat dense :icon="mdiWindowMaximize" @click="toggleMaximize" />
+          <q-btn flat dense :icon="mdiWindowClose" @click="close" />
+          <!-- <q-icon :name="mdiWindowClose" size="lg" color="red" /> -->
+        </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
+        <!-- <q-item-label header> Essential Links </q-item-label> -->
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -47,60 +47,60 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
-
+import EssentialLink, {
+  EssentialLinkProps,
+} from 'components/EssentialLink.vue';
+import { version, productName } from '../../package.json';
+import {
+  mdiWindowClose,
+  mdiWindowMaximize,
+  mdiWindowMinimize,
+} from '@quasar/extras/mdi-v5';
 defineOptions({
-  name: 'MainLayout'
+  name: 'MainLayout',
 });
+import { electronApi } from '../api/electron-api';
+const isElectron = process.env.MODE === 'electron';
+
+function minimize() {
+  electronApi.minimize();
+}
+function toggleMaximize() {
+  electronApi.toggleMaximize();
+}
+function close() {
+  electronApi.close();
+  fn();
+}
+
+const fn = () => {
+  console.log('aaa');
+};
 
 const linksList: EssentialLinkProps[] = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: 'Load',
+    caption: 'load workbench profile',
+    icon: 'folder',
+    link: '/',
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    title: 'to error',
+    caption: 'close workbench',
+    icon: 'close',
+    link: '/error',
   },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
+  // {
+  //   title: 'Github',
+  //   caption: 'github.com/quasarframework',
+  //   icon: 'code',
+  //   link: '/',
+  // },
 ];
-
+// link: 'https://quasar.dev',
 const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer () {
+function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>

@@ -55,6 +55,36 @@ function createWindow() {
   enable(mainWindow.webContents);
 }
 
+// import * as SerialPort from 'serialport';
+// //let port: SerialPort | null = null;
+// let port: SerialPort | null = null;
+// function openPort() {
+//   port = new SerialPort('/dev/ttyUSB0', {
+//     baudRate: 9600,
+//   });
+//   port.on('open', () => {
+//     console.log('Serial port opened');
+//   });
+//   port.on('data', (data: Buffer) => {
+//     console.log('Received data:', data.toString());
+//   });
+//   port.on('error', (err) => {
+//     console.error('Error:', err.message);
+//   });
+// }
+
+// function closePort() {
+//   if (port) {
+//     port.close((err) => {
+//       if (err) {
+//         console.error('Error closing port:', err.message);
+//       } else {
+//         console.log('Serial port closed');
+//       }
+//     });
+//   }
+// }
+
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
@@ -62,7 +92,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
+//app.on('before-quit', closePort);
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();

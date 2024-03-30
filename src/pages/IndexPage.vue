@@ -2,6 +2,9 @@
   <q-page class="row items-center justify-evenly">
     <p>Counter: {{ store.counter }}</p>
     <q-btn @click="openElectronFileDialog">Open Electron File Dialog</q-btn>
+    <q-btn @click="portOpen">Open Port</q-btn>
+    <q-btn @click="getPortList">getPostLists</q-btn>
+    <q-select v-model="portModel" :options="portLists" style="width: 100px" />
     <example-component
       title="Example component"
       active
@@ -23,7 +26,6 @@ export default defineComponent({
   components: { ExampleComponent },
   setup() {
     const store = useCounterStore();
-
     const todos = ref<Todo[]>([
       {
         id: 1,
@@ -33,23 +35,15 @@ export default defineComponent({
         id: 2,
         content: 'ct2',
       },
-      {
-        id: 3,
-        content: 'ct3',
-      },
-      {
-        id: 4,
-        content: 'ct4',
-      },
-      {
-        id: 5,
-        content: 'ct5',
-      },
     ]);
 
     const meta = ref<Meta>({
       totalCount: 1200,
     });
+
+    //const portLists = ref(['string']);
+    const portLists = ref(['']);
+    const portModel = ref(null);
 
     const openElectronFileDialog = async () => {
       return electronApi.openFileDialog('AHA', 'folder', {
@@ -57,8 +51,50 @@ export default defineComponent({
         extensions: ['jpg'],
       });
     };
+    const portOpen = async() =>{
+      electronApi.send('open-serial-port', 'COM3'); // Repla
+    }
+    const getPortList = async () => {
+      const data = await electronApi.getPortList();
+      if (data === undefined) {
+        console.log('Got null', data);
+        return;
+      }
+      // const propertiesToKeep: (keyof Person)[] = ['path'];
+      // const filteredArray = filterProperties(ports, propertiesToKeep);
+      // portLists.value = filteredArray;
 
-    return { todos, meta, store, openElectronFileDialog };
+      // const ports = data.map((m) => {
+      //   if (m.path !== undefined) {
+      //     return m.path;
+      //   }
+      // });
+      console.log('Got port list=', data);
+      portLists.value = data;
+    };
+    // function filterProperties<T extends Record<string, any>>(
+    //   array: T[],
+    //   propertiesToKeep: (keyof T)[]
+    // ): Partial<T>[] {
+    //   return array.map((obj) =>
+    //     propertiesToKeep.reduce((acc, prop) => {
+    //       if (obj.hasOwnProperty(prop)) {
+    //         acc[prop] = obj[prop];
+    //       }
+    //       return acc;
+    //     }, {} as Partial<T>)
+    //   );
+    // }
+
+    return {
+      todos,
+      meta,
+      store,
+      openElectronFileDialog,
+      getPortList,
+      portLists,
+      portModel,
+    };
   },
 });
 </script>

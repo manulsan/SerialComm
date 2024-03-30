@@ -14,6 +14,13 @@ const path = require('path');
 
 module.exports = configure(function (/* ctx */) {
   return {
+    // alex added
+    pluginOptions: {
+      electronBuilder: {
+        externals: ['serialport'],
+      },
+    },
+    // alex added
     bin: {
       // ... other configurations
       //windowsAndroidStudio: 'E:\\Android Studio\\bin\\studio64.exe'

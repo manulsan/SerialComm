@@ -61,21 +61,16 @@ defineOptions({
 });
 import { electronApi } from '../api/electron-api';
 const isElectron = process.env.MODE === 'electron';
+const close = () => void electronApi.close();
+const minimize = () => void electronApi.minimize();
+const toggleMaximize = () => void electronApi.toggleMaximize();
 
-function minimize() {
-  electronApi.minimize();
-}
-function toggleMaximize() {
-  electronApi.toggleMaximize();
-}
-function close() {
-  electronApi.close();
-  fn();
-}
-
-const fn = () => {
-  console.log('aaa');
-};
+// const getSerialPorts = () => {
+//   return electronApi.openFileDialog('AHA', 'folder', {
+//     name: 'images',
+//     extensions: ['jpg'],
+//   });
+// };
 
 const linksList: EssentialLinkProps[] = [
   {
